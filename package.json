@@ -1,0 +1,16 @@
+{
+  "name": "audiocity",
+  "version": "0.0.5",
+  "description": "A music player",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "tsc && npm run ."
+  },
+  "author": "Lunadevvv",
+  "devDependencies": {
+    "@types/node": "^20.4.5"
+  },
+  "dependencies": {
+    "glob": "^10.3.3"
+  }
+}

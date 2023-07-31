@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AudioCity</title>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
+    <script src="/public/js/index.js" defer></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
+    <link rel="stylesheet" href="/public/css/index.css">
+</head>
+<body>
+    <div class="bottomBar">
+        <audio controls="controls" id="audio" style="display: none;">
+            <source src="" id="song" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div id="shuffle" class="shuffle center" onclick="shuffle()">
+            <ion-icon name="shuffle" style="color: gray;" id="shuffleMix"></ion-icon>
+        </div>
+
+        <div id="skipBack" class="skipBack" onclick="skipBack()">
+            <ion-icon name="play-back-circle" class="playbackButtons center"></ion-icon>
+        </div>
+
+        <div id="play" class="play" onclick="play()">
+            <ion-icon name="play-circle" class="playbackButtons center" id="play"></ion-icon>
+            <ion-icon name="pause-circle" class="playbackButtons center" id="pause"></ion-icon>
+        </div>
+
+        <div id="skipForward" class="skipForward" onclick="skipForward()">
+            <ion-icon name="play-forward-circle" class="playbackButtons center"></ion-icon>
+        </div>
+
+        <!-- Without the z-index style, for some reason clicking the play button triggers this instead. -->
+        <div id="loop" class="loop center" onclick="loop()" style="z-index: -10;">
+            <ion-icon name="infinite" id="loopButton" style="color : gray;"></ion-icon>
+        </div>
+
+
+        <div id='playBar' class="center">
+            <div class="realTime" id="realTime">0:00</div>
+            <input type="range" min="0" max="100" value="100" class="bar" id="bar"></input>
+            <div class="remainingDuration" id="remainingDuration">0:00</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+body {
+    background-color: black;
+    height : 100%;
+    width : 100%;
+    margin: 0;
+}
+
+.bottomBar {
+    position: fixed;
+    top : calc(100% - 75px);
+    height : 75px;
+    width : 100vw;
+    background-color: rgb(15, 15, 15);
+}
+
+.center {
+    position: absolute;
+    left : 50%;
+    transform: translate(-50%, 0);
+}
+
+.playbackButtons {
+    width : 30px;
+    height : 30px;
+    color : gray;
+}
+
+.play {
+    position : relative;
+}
+
+.skipBack {
+    position : relative;
+    left : -30px;
+}
+
+.skipForward {
+    position: relative;
+    left : 30px
+}
+
+#shuffleMix {
+    position : relative;
+    left : -60px;
+    width: 30px;
+    height : 30px;
+}
+
+#loopButton {
+    position : relative;
+    left : 65px;
+    width: 30px;
+    height : 30px;
+}
+
+#playBar {
+    display: flex;
+    top: 30px;
+    flex-direction: row;
+}
+
+.bar {
+    border-radius: 8px;
+    height: 4px;
+    width: 30vw;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    width: 10px;
+    -webkit-appearance: none;
+    height: 12px;
+    background : gray;
+    border-radius: 50%;
+}
+
+
+.realTime {
+    color: gray;
+    font-size: large;
+}
+
+.remainingDuration {
+    color: gray;
+    font-size: large;
+}

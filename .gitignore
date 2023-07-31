@@ -1,2 +1,8 @@
 node_modules/
 dist/
+database/users/
+database/thumbnails/
+database/songs/
+database/playlists/
+database/songData.json
+.env

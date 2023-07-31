@@ -1,14 +1,17 @@
 import fs from "fs";
 import { glob } from "glob";
+import ytdl from "ytdl-core";
+import client from "https";
 
 export default class database {
     databaseDir : string;
     playlists : Array<playlist>
-
+    songs : Array<song>
 
     constructor(baseDir : string) {
         this.databaseDir = baseDir;
         this.playlists = [];
+        this.songs = [];
 
         if(!this.databaseDir) throw new Error("Missing database directory.");
         if(typeof this.databaseDir != "string") throw new Error("Database directory must be a string.");
@@ -20,6 +23,7 @@ export default class database {
         }
 
         this.reloadPlaylists();
+        this.reloadSongs();
     }
 
     createPlaylist(playlistName : string, user : string, givenInformation : {
@@ -28,22 +32,22 @@ export default class database {
         public? : boolean
     }) : playlist | undefined {
         if(!playlistName) {
-            console.log("Missing name!");
+            console.error("Missing name!");
             return;
         }
 
         if(!user) {
-            console.log("Missing user");
+            console.error("Missing user");
             return;
         }
 
         if(typeof playlistName != "string") {
-            console.log("Playlist Name must be a string");
+            console.error("Playlist Name must be a string");
             return;
         }
 
         if(typeof user != "string") {
-            console.log("User name must be a string");
+            console.error("User name must be a string");
             return;
         }
 
@@ -88,28 +92,127 @@ export default class database {
             }
         });
 
-
         return true;
     }
 
-    getPlaylist(playlistName : string, username : string) { 
+    getPlaylist(playlistName : string, username : string) : [playlist | undefined, number | undefined, boolean] { 
         for(let i = 0; i < this.playlists.length; i++) {
             if(this.playlists[i].name == playlistName && (this.playlists[i].user == username || this.playlists[i].public)) {
-                return this.playlists[i];
+                return [this.playlists[i], i, true];
             }
         }
 
-        return "Failed to find playlist!";
+        return [undefined, undefined, false];
     }
 
     addToPlaylist(playlistName : string, username : string, songs : Array<song>) {
-        let playlist = this.getPlaylist(playlistName, username);
+        let [playlist, spot, success] = this.getPlaylist(playlistName, username);
+
+        if(!success || !spot || !playlist) return false;
+
 
         if(!playlist || typeof playlist == "string") {
             return "Failed to find playlist, or the user is not the owner";
         }
 
         if(username !== playlist.user) return "Failed to find playlist, or the user is not the owner.";
+
+        for(let i = 0; i < songs.length; i++) {
+            this.playlists[spot].songs.push(songs[i]);
+        }
+
+        fs.writeFileSync(`${this.databaseDir}/playlists/${this.playlists[spot].name}.json`, JSON.stringify(this.playlists[spot]));
+
+        return true;
+    }
+
+    reloadSongs() {
+        if(!fs.existsSync(`${this.databaseDir}/songData.json`)) {
+            fs.writeFileSync(`${this.databaseDir}/songData.json`, JSON.stringify({
+                songs : []
+            }));
+
+            return true;
+        }
+
+        this.songs = JSON.parse(fs.readFileSync(`${this.databaseDir}/songData.json`).toString()).songs;
+    }
+
+    async saveSong(songLink : string) {
+        let isYTLink = ytdl.validateURL(songLink);
+    
+        this.reloadSongs();
+        
+        if(isYTLink == false) {
+            console.log("Link is not a youtube link");
+            return false;
+        }
+        
+        let videoInfo = await ytdl.getInfo(ytdl.getURLVideoID(songLink));
+        
+        if(fs.existsSync(`${this.databaseDir}/songs/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.author}.mp3`)) return false;
+
+        if(!fs.existsSync(`${this.databaseDir}/songs/${videoInfo.videoDetails.title}/`)) fs.mkdirSync(`${this.databaseDir}/songs/${videoInfo.videoDetails.title}/`, { recursive : true });
+        if(!fs.existsSync(`${this.databaseDir}/thumbnails/${videoInfo.videoDetails.title}/`)) fs.mkdirSync(`${this.databaseDir}/thumbnails/${videoInfo.videoDetails.title}/`, { recursive : true });
+
+
+        let song : song = {
+            name : videoInfo.videoDetails.title,
+            description : videoInfo.videoDetails.description ? videoInfo.videoDetails.description : "",
+            author : videoInfo.videoDetails.ownerChannelName,
+            mediaLocation : `${this.databaseDir}/songs/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.ownerChannelName}.mp3`,
+            thumbnailLocation : `${this.databaseDir}/thumbnails/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.ownerChannelName}.png`
+        }
+
+        ytdl(songLink, {filter : 'audioonly'}).pipe(fs.createWriteStream(`${this.databaseDir}/songs/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.ownerChannelName}.mp3`));
+
+        client.get(videoInfo.videoDetails.thumbnails[0].url, (res) => {
+            res.pipe(fs.createWriteStream(`${this.databaseDir}/thumbnails/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.ownerChannelName}.png`));
+        });
+
+        this.songs.push(song);
+
+        fs.writeFileSync(`${this.databaseDir}/songData.json`, JSON.stringify({
+            songs : this.songs
+        }, undefined, 2));
+
+        return true;
+    }
+
+    searchSongs(songSearch : string) {
+        let availableSongs : Array<song> = [];
+
+        for(let i = 0; i < this.songs.length; i++) {
+            if(this.songs[i].name.includes(songSearch)) availableSongs.push(this.songs[i]); 
+        }
+
+        return availableSongs;
+    }
+
+    getSong(songName : string, songAuthor : string) {
+        for(let i = 0; i < this.songs.length; i++) {
+            if(this.songs[i].name == songName && this.songs[i].author == songAuthor) {
+                return this.songs[i];
+            }
+        }
+
+        return undefined;
+    }
+
+    deleteSong(songName : string, songAuthor : string) {
+        // console.log(this.songs);
+        for(let i = 0; i < this.songs.length; i++) {
+            if(this.songs[i].name == songName && this.songs[i].author == songAuthor) {
+                fs.rmSync(this.songs[i].mediaLocation);
+                fs.rmSync(this.songs[i].thumbnailLocation);
+
+                this.songs.splice(i, 1);
+
+                fs.writeFileSync(`${this.databaseDir}/songData.json`, JSON.stringify({
+                    songs : this.songs
+                }, undefined, 2));        
+            }
+        }
     }
 }
 
@@ -124,7 +227,6 @@ export interface playlist {
 export interface song {
     name : string;
     description : string;
-    shortDescription : string;
     author : string,
     mediaLocation : string;
     thumbnailLocation : string;

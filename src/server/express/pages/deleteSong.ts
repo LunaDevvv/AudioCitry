@@ -2,7 +2,7 @@ import express from "express";
 import mainDatabase from "../../..";
 const ROUTER = express.Router();
 
-ROUTER.get("/getThumbnail", (req, res) => {
+ROUTER.get("/deleteSong", (req, res) => {
     let query = req.query;
     let author = query["author"];
     let songName = query["name"];
@@ -10,13 +10,9 @@ ROUTER.get("/getThumbnail", (req, res) => {
     if(!author || !songName) return res.send("Missing fields");
     if(typeof author !== "string" || typeof songName !== "string") return res.send("Missing fields");
 
-    let song = mainDatabase.getSong(songName, author);
+    mainDatabase.deleteSong(songName, author);
 
-    if(!song?.thumbnailLocation) {
-        return res.send("Unable to find song!");
-    }
-
-    res.sendFile(song.thumbnailLocation);
+    res.send("Deleted!");
 });
 
-export { ROUTER as getThumbnail };
+export { ROUTER as deleteSong };

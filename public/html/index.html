@@ -9,6 +9,7 @@
     <script src="/public/js/index.js" defer></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
     <link rel="stylesheet" href="/public/css/index.css">
+    <link rel="icon" type="image/x-icon" href="/public/photos/logo.png">
 </head>
 <body>
     <audio controls="controls" id="audio" style="display : none;">
@@ -17,6 +18,8 @@
     </audio>
 
     <div class="sideBar">
+        <img src="/public/photos/logo.png" width="300">
+
         <ion-icon name="logo-youtube" style="color: red; width: 20px; height: 20px;" id="ytDownloadLogo"></ion-icon>
         <input id="ytDownload" placeholder="Download from youtube link"></input>
     </div>
@@ -25,6 +28,9 @@
         <div id="shuffle" class="shuffle center" onclick="shuffle()">
             <ion-icon name="shuffle" style="color: gray;" id="shuffleMix"></ion-icon>
         </div>
+
+        <pre id="currentSong">No song playing...</pre>
+        <img id="currentSongThumbnail" width="300" src="">
 
         <div id="skipBack" class="skipBack" onclick="skipBack()">
             <ion-icon name="play-back-circle" class="playbackButtons center"></ion-icon>
@@ -44,6 +50,10 @@
             <ion-icon name="infinite" id="loopButton" style="color : gray;"></ion-icon>
         </div>
 
+        <ion-icon name="volume-high" id="volumeBarIcon"></ion-icon>
+        <div id='volBar' class="center">
+            <input type="range" min="0" max="100" value="100" class="volumeBar" id="volumeBar"></input>
+        </div>
 
         <div id='playBar' class="center">
             <div class="realTime" id="realTime">0:00</div>
@@ -52,9 +62,10 @@
         </div>
     </div>
 
-    <div id="songHolder">
+    <div id="pageHolder">
         <h1 style="text-align: center; color: white;">All Songs</h1>
         <hr>
+        <div id="songHolder"></div>
     </div>
 </body>
 </html>

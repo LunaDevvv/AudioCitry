@@ -12,7 +12,9 @@ ROUTER.get("/getSong", (req, res) => {
 
     let song = mainDatabase.getSong(songName, author);
 
-    res.sendFile(song?.mediaLocation ? song.mediaLocation : "Unable to find song!");
+    if(!song?.mediaLocation) return res.send("Unable to find song!");
+
+    res.sendFile(song?.mediaLocation);
 });
 
 export { ROUTER as getSong };

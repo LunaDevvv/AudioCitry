@@ -2,6 +2,7 @@
   "name": "audiocity",
   "version": "0.1.4",
   "description": "A music player",
+  "license" : "BSD-2-Clause",
   "main": "./dist/index.js",
   "scripts": {
     "test": "tsc && node .",

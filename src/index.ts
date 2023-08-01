@@ -36,19 +36,6 @@ for(let i = 0; i < process.argv.length; i++) {
 
 const mainDatabase = new database(`${__dirname.replaceAll("\\", "/").replace("dist", "")}database`);
 
-//YTDL has a seizure every once in a while, missing a try catch block, so I am trying to avoid that.
-try {
-    //! Remember to remove these once the website is set up.
-    // Gloom by Geoxor
-    mainDatabase.saveSong("https://www.youtube.com/watch?v=dqDs14YqsAw");
-
-    // Waiting for love by avicii
-    mainDatabase.saveSong("https://www.youtube.com/watch?v=cHHLHGNpCSA");
-
-    // Levels by avicii
-    mainDatabase.saveSong("https://www.youtube.com/watch?v=_ovdm2yX4MA");
-} catch(err) {}
-
 if(runType == "server") {
     runServer(NGROK_TOKEN);
 }

@@ -1,7 +1,11 @@
 import express from "express";
 import { PORT } from "../..";
 
-import { index_page } from "./pages/index";
+import { indexPage } from "./pages/index";
+import { getSong } from "./pages/getSong";
+import { downloadSong } from "./pages/downloadSong";
+import { getAllSongs } from "./pages/getAllSongs";
+import { getThumbnail } from "./pages/getThumbnail";
 
 
 let app = express();
@@ -11,13 +15,17 @@ let baseDir = `${__dirname.replaceAll("\\", "/").replace("dist/server/express", 
 export default function createWebServer(NGROK_URL : string | undefined) {
     let NGROK_TEXT = "";
 
-    app.use("/public", express.static(baseDir + "/public"))
+    app.use("/public", express.static(baseDir + "/public"));
 
     if(NGROK_URL) {
         NGROK_TEXT = `\nAudioCity NGROK link is ${NGROK_URL}`;
     }
 
-    app.use(index_page);
+    app.use(indexPage);
+    app.use(getSong);
+    app.use(getAllSongs);
+    app.use(getThumbnail);
+    app.use(downloadSong);
 
     app.listen(PORT, () => {
         console.log(`@###############################################@

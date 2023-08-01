@@ -6,4 +6,4 @@ ROUTER.get("/", (req, res) => {
     res.sendFile(`${baseDir}/public/html/index.html`);
 });
 
-export { ROUTER as index_page };
+export { ROUTER as indexPage };

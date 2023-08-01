@@ -11,12 +11,17 @@
     <link rel="stylesheet" href="/public/css/index.css">
 </head>
 <body>
-    <div class="bottomBar">
-        <audio controls="controls" id="audio" style="display: none;">
-            <source src="" id="song" type="audio/mp3">
-            Your browser does not support the audio element.
-        </audio>
+    <audio controls="controls" id="audio" style="display : none;">
+        <source src="" id="song" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
+    <div class="sideBar">
+        <ion-icon name="logo-youtube" style="color: red; width: 20px; height: 20px;" id="ytDownloadLogo"></ion-icon>
+        <input id="ytDownload" placeholder="Download from youtube link"></input>
+    </div>
+
+    <div class="bottomBar">
         <div id="shuffle" class="shuffle center" onclick="shuffle()">
             <ion-icon name="shuffle" style="color: gray;" id="shuffleMix"></ion-icon>
         </div>
@@ -45,6 +50,11 @@
             <input type="range" min="0" max="100" value="100" class="bar" id="bar"></input>
             <div class="remainingDuration" id="remainingDuration">0:00</div>
         </div>
+    </div>
+
+    <div id="songHolder">
+        <h1 style="text-align: center; color: white;">All Songs</h1>
+        <hr>
     </div>
 </body>
 </html>

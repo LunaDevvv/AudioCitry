@@ -64,7 +64,18 @@ body {
     height: 4px;
     width: 30vw;
     outline: none;
+    appearance: none;
     -webkit-appearance: none;
+}
+
+.sideBar {
+    height: calc(100vh - 75px);
+    width: 300px;
+    background-color: rgb(15, 15, 15);
+    position: absolute;
+    top : 0px;
+    left : 0px;
+
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -84,4 +95,31 @@ input[type='range']::-webkit-slider-thumb {
 .remainingDuration {
     color: gray;
     font-size: large;
+}
+
+#ytDownload {
+    top: 2px;
+    position: absolute;
+    background-color: rgb(27, 27, 27);
+    width: 250px;
+    left: 25px;
+    border-radius: 10px;
+    border: none;
+    height: 20px;
+    font-weight: bold;
+}
+
+#ytDownloadLogo {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+}
+
+#songHolder {
+    position : absolute;
+    width : calc(100% - 350px);
+    height : calc(100% - 100px);
+    left: 325px;
+    background-color: rgb(39, 39, 39);
+    border-radius: 30px;
 }

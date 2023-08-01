@@ -149,25 +149,31 @@ export default class database {
         }
         
         let videoInfo = await ytdl.getInfo(ytdl.getURLVideoID(songLink));
-        
-        if(fs.existsSync(`${this.databaseDir}/songs/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.author}.mp3`)) return false;
+        let title = videoInfo.videoDetails.title;
+        let author = videoInfo.videoDetails.ownerChannelName;
 
-        if(!fs.existsSync(`${this.databaseDir}/songs/${videoInfo.videoDetails.title}/`)) fs.mkdirSync(`${this.databaseDir}/songs/${videoInfo.videoDetails.title}/`, { recursive : true });
-        if(!fs.existsSync(`${this.databaseDir}/thumbnails/${videoInfo.videoDetails.title}/`)) fs.mkdirSync(`${this.databaseDir}/thumbnails/${videoInfo.videoDetails.title}/`, { recursive : true });
+        title = title.replaceAll(":", "");
+        author = author.replaceAll(":", "");
+
+        if(this.getSong(title, author) !== undefined) return false; 
+
+
+        if(!fs.existsSync(`${this.databaseDir}/songs/${title}/`)) fs.mkdirSync(`${this.databaseDir}/songs/${title}/`, { recursive : true });
+        if(!fs.existsSync(`${this.databaseDir}/thumbnails/${title}/`)) fs.mkdirSync(`${this.databaseDir}/thumbnails/${title}/`, { recursive : true });
 
 
         let song : song = {
-            name : videoInfo.videoDetails.title,
+            name : title,
             description : videoInfo.videoDetails.description ? videoInfo.videoDetails.description : "",
-            author : videoInfo.videoDetails.ownerChannelName,
-            mediaLocation : `${this.databaseDir}/songs/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.ownerChannelName}.mp3`,
-            thumbnailLocation : `${this.databaseDir}/thumbnails/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.ownerChannelName}.png`
+            author : author,
+            mediaLocation : `${this.databaseDir}/songs/${title}/${author}.mp3`,
+            thumbnailLocation : `${this.databaseDir}/thumbnails/${title}/${author}.png`
         }
 
-        ytdl(songLink, {filter : 'audioonly'}).pipe(fs.createWriteStream(`${this.databaseDir}/songs/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.ownerChannelName}.mp3`));
+        ytdl(songLink, {filter : 'audioonly'}).pipe(fs.createWriteStream(`${this.databaseDir}/songs/${title}/${author}.mp3`));
 
         client.get(videoInfo.videoDetails.thumbnails[0].url, (res) => {
-            res.pipe(fs.createWriteStream(`${this.databaseDir}/thumbnails/${videoInfo.videoDetails.title}/${videoInfo.videoDetails.ownerChannelName}.png`));
+            res.pipe(fs.createWriteStream(`${this.databaseDir}/thumbnails/${title}/${author}.png`));
         });
 
         this.songs.push(song);
@@ -190,6 +196,7 @@ export default class database {
     }
 
     getSong(songName : string, songAuthor : string) {
+        songName = songName.replaceAll(":", "");
         for(let i = 0; i < this.songs.length; i++) {
             if(this.songs[i].name == songName && this.songs[i].author == songAuthor) {
                 return this.songs[i];
@@ -200,7 +207,7 @@ export default class database {
     }
 
     deleteSong(songName : string, songAuthor : string) {
-        // console.log(this.songs);
+        songName = songName.replaceAll(":", "");
         for(let i = 0; i < this.songs.length; i++) {
             if(this.songs[i].name == songName && this.songs[i].author == songAuthor) {
                 fs.rmSync(this.songs[i].mediaLocation);

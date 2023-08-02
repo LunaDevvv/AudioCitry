@@ -1,3 +1,3 @@
-npm i
-npm install typescript -g
-npm run test
+npm /c i
+npm /c install typescript -g
+start cmd /k npm run test

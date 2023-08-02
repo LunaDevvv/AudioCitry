@@ -1,1 +1,1 @@
-npm run test-ngrok
+start cmd /k npm run test-ngrok

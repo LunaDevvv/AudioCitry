@@ -71,7 +71,7 @@ getAndExtractData().then(async() => {
 
 async function getAndExtractData() {
     axios.get(
-        `https://api.github.com/repos/moonmatt/metmusic/releases/latest`
+        `https://api.github.com/repos/lunadevvv/audiocity/releases/latest`
     ).then(async (response) => {
         
         // Wipe old temp files.

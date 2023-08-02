@@ -14,10 +14,7 @@ getAndExtractData().then(async() => {
     console.error = (text : string) => {}
 
     while(fs.existsSync("./temp/version.txt") == false) {
-        console.log(false);
-
         await sleep(50);
-
         continue;
     }
 

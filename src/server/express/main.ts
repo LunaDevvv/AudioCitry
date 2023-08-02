@@ -1,5 +1,5 @@
 import express from "express";
-import { PORT } from "../..";
+import { PORT } from "../../main";
 
 import { indexPage } from "./pages/index";
 import { getSong } from "./pages/getSong";

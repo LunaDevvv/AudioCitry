@@ -134,7 +134,7 @@ songElement.addEventListener("timeupdate", (ev) => {
 
     timeBar.style.background = `linear-gradient(to right, blue 0%, red ${(timeBar.value-timeBar.min)/(timeBar.max-timeBar.min)*100}%, #DEE2E6 ${(timeBar.value-timeBar.min)/(timeBar.max-timeBar.min)*100}%, #DEE2E6 100%)`;
 
-    if(timeBar.value == 100 && doLoop == "loop" && songPosition == currentSongs.length) {
+    if(timeBar.value == 100 && doLoop == "loop" && songPosition == currentSongs.length - 1) {
         songPosition = 0;
 
         timeBar.value = 0;

@@ -1,5 +1,5 @@
 import express from "express";
-import mainDatabase from "../../..";
+import mainDatabase from "../../../main.js";
 const ROUTER = express.Router();
 
 ROUTER.get("/getThumbnail", (req, res) => {

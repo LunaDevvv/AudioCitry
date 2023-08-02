@@ -6,3 +6,5 @@ database/songs/
 database/playlists/
 database/songData.json
 .env
+temp/
+release.zip

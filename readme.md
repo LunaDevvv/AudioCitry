@@ -1,5 +1,5 @@
 # AudioCity
-![image](/public/photos/nobackgroundLogo.png)
+![image](/public/photos/noBackgroundLogo.png)
 
 ## Welcome!
 Hi!<br>

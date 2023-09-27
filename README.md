@@ -7,7 +7,7 @@ AudioCity is an **Open-Source** music client, like [**Spotify**](https://open.sp
 The difference is that this is **Self-Hosted**, meaning that all songs on this, are **chosen by you, and the site is hosted by you.**<br>
 The upside of this, is that when you are hosting it, all songs you have are available when you are offline.
 
-***WARNING:*** Users and playlists not implemented yet. All songs downloaded are available to everyone that connects.
+***WARNING:*** playlists not implemented yet. All songs downloaded are available to everyone that connects.
 
 This project is only developed by [puppynuff](https://github.com/puppynuff), so updates might be slow. If you want any updates, feel free to edit the source yourself, and maybe make a pull request!
 

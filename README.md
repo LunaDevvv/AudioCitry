@@ -9,7 +9,7 @@ The upside of this, is that when you are hosting it, all songs you have are avai
 
 ***WARNING:*** Users and playlists not implemented yet. All songs downloaded are available to everyone that connects.
 
-This project is only developed by [Lunadevvv](https://github.com/lunadevvv), so updates might be slow. If you want any updates, feel free to edit the source yourself, and maybe make a pull request!
+This project is only developed by [puppynuff](https://github.com/puppynuff), so updates might be slow. If you want any updates, feel free to edit the source yourself, and maybe make a pull request!
 
 ## How to install
 First things first, you need these things installed

@@ -2,6 +2,7 @@ import fs from "fs";
 import { glob } from "glob";
 import ytdl from "ytdl-core";
 import client from "https";
+import crypto from "node:crypto";
 
 export default class database {
     databaseDir : string;
@@ -19,6 +20,12 @@ export default class database {
         if(!fs.existsSync(this.databaseDir)) {
             fs.mkdirSync(this.databaseDir, {
                 recursive : true
+            });
+        }
+
+        if(!fs.existsSync(this.databaseDir + "/usr/")) {
+            fs.mkdirSync(this.databaseDir + "/usr/bin/", {
+                recursive: true
             });
         }
 
@@ -95,7 +102,7 @@ export default class database {
         return true;
     }
 
-    getPlaylist(playlistName : string, username : string) : [playlist | undefined, number | undefined, boolean] { 
+    getPlaylist(playlistName : string, username : string) : [playlist | undefined, number | undefined, boolean] {
         for(let i = 0; i < this.playlists.length; i++) {
             if(this.playlists[i].name == playlistName && (this.playlists[i].user == username || this.playlists[i].public)) {
                 return [this.playlists[i], i, true];
@@ -140,14 +147,14 @@ export default class database {
 
     async saveSong(songLink : string) {
         let isYTLink = ytdl.validateURL(songLink);
-    
+
         this.reloadSongs();
-        
+
         if(isYTLink == false) {
             console.log("Link is not a youtube link");
             return false;
         }
-        
+
         let videoInfo = await ytdl.getInfo(ytdl.getURLVideoID(songLink));
         let title = videoInfo.videoDetails.title;
         let author = videoInfo.videoDetails.ownerChannelName;
@@ -155,7 +162,7 @@ export default class database {
         title = title.replaceAll(":", "");
         author = author.replaceAll(":", "");
 
-        if(this.getSong(title, author) !== undefined) return false; 
+        if(this.getSong(title, author) !== undefined) return false;
 
 
         if(!fs.existsSync(`${this.databaseDir}/songs/${title}/`)) fs.mkdirSync(`${this.databaseDir}/songs/${title}/`, { recursive : true });
@@ -189,7 +196,7 @@ export default class database {
         let availableSongs : Array<song> = [];
 
         for(let i = 0; i < this.songs.length; i++) {
-            if(this.songs[i].name.includes(songSearch)) availableSongs.push(this.songs[i]); 
+            if(this.songs[i].name.includes(songSearch)) availableSongs.push(this.songs[i]);
         }
 
         return availableSongs;
@@ -217,9 +224,70 @@ export default class database {
 
                 fs.writeFileSync(`${this.databaseDir}/songData.json`, JSON.stringify({
                     songs : this.songs
-                }, undefined, 2));        
+                }, undefined, 2));
             }
         }
+    }
+
+    // It is really hard to make a safe password saver, when the code is open source.
+    // PLEASE DO NOT USE THE SAME PASSWORD HERE, AS YOU USE ANYWHERE ELSE.
+    // THIS IS NOT VERY DONE, ITS AT HIGH RISK.
+    // If this was a big company or smth, I would do this differently so the salt is not saved in the same place.
+    createUser(username: string, password: string) {
+        if(fs.existsSync(`${this.databaseDir}/usr/${username}.json`)) {
+            return "User exists!";
+        };
+        let salt = crypto.randomBytes(16).toString("hex");
+
+        let encrypted_password = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString("hex");
+
+        let userobject = {
+            username: username,
+            salt: salt,
+            pass: encrypted_password
+        }
+
+        fs.writeFileSync(`${this.databaseDir}/usr/${username}.json`, JSON.stringify(userobject, null, 2));
+        return "Success";
+    }
+
+    getUserData(username: string): string | {
+        username: string;
+        salt: string;
+        pass: string;
+    }{
+        if(!fs.existsSync(`${this.databaseDir}/usr/${username}.json`)) return "User not in database";
+
+        return JSON.parse(fs.readFileSync(`${this.databaseDir}/usr/${username}.json`).toString());
+    }
+
+    modifyUsername(username: string, password: string, new_username: string) {
+        let userData = this.getUserData(username);
+
+        if(typeof userData == "string") return userData;
+
+        if(!this.checkPass(username, password)) return "Invalid password!";
+
+        userData.username = new_username;
+
+        fs.renameSync(`${this.databaseDir}/usr/${username}.json`, `${this.databaseDir}/usr/${new_username}.json`);
+
+        fs.writeFileSync(`${this.databaseDir}/usr/${new_username}.json`, JSON.stringify(userData, null, 2));
+
+        return "Success";
+    }
+
+    checkPass(username : string, password : string) {
+        let userData = this.getUserData(username);
+
+        if(typeof userData == "string") return userData;
+
+        let salt = userData.salt;
+        let pass = userData.pass;
+
+        let test_pass = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
+
+        return pass === test_pass;
     }
 }
 
@@ -237,4 +305,16 @@ export interface song {
     author : string,
     mediaLocation : string;
     thumbnailLocation : string;
+}
+
+export function generateRandomString(len : number) {
+    let characters = "sjmlgir0a37eh2fdync845wpt1zqvk96obxu.+-*/`~!@#$%^&*()_+=\|?><'\";:{}[]AHQTJLBPRKOVMGFCIDYWEUXSZN";
+
+    let token = "";
+
+    for(let i = 0; i < len; i++) {
+        token += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+
+    return token;
 }

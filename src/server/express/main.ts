@@ -7,7 +7,10 @@ import { downloadSong } from "./pages/downloadSong";
 import { getAllSongs } from "./pages/getAllSongs";
 import { getThumbnail } from "./pages/getThumbnail";
 import { deleteSong } from "./pages/deleteSong";
-
+import { createUser } from "./pages/createUser";
+import { createPlaylist } from "./pages/createPlaylist";
+import { loginPage } from "./pages/login";
+import { userLogin } from "./pages/userLogin";
 
 let app = express();
 
@@ -28,6 +31,10 @@ export default function createWebServer(NGROK_URL : string | undefined) {
     app.use(getThumbnail);
     app.use(downloadSong);
     app.use(deleteSong);
+    app.use(createUser);
+    app.use(createPlaylist);
+    app.use(loginPage);
+    app.use(userLogin);
 
     app.listen(PORT, () => {
         console.log(`@###############################################@

@@ -120,6 +120,26 @@ input[type='range']::-webkit-slider-thumb {
     border: none;
     height: 20px;
     font-weight: bold;
+    color: white;
+}
+
+#logout {
+    top: 230px;
+    position: absolute;
+    background-color: rgb(27, 27, 27);
+    color: white;
+    border: none;
+    width: 250px;
+    border-radius: 15px;
+    left: 25px;
+}
+#logoutLogo {
+    position: absolute;
+    top: 230px;
+    left: 3px;
+    color: white;
+    width: 25px;
+    height: 25px;
 }
 
 #ytDownloadLogo {

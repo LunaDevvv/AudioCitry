@@ -7,6 +7,12 @@ const value = timeBar.value;
 let currentSongs = [];
 let songPosition = 0;
 
+let logged_in = localStorage.getItem("user");
+
+if(logged_in == null) {
+    window.location = "./login";
+}
+
 getAllSongs();
 navigator.mediaSession.setActionHandler("play", async () => {
     play();
@@ -40,7 +46,7 @@ volumeBar.onchange = function() {
     this.style.background = `linear-gradient(to right, blue 0%, red ${(this.value-this.min)/(this.max-this.min)*100}%, #DEE2E6 ${(this.value-this.min)/(this.max-this.min)*100}%, #DEE2E6 100%)`;
 };
 
-let songElement = document.getElementsByTagName("audio")[0];   
+let songElement = document.getElementsByTagName("audio")[0];
 
 let playing = false;
 let doShuffle = false;
@@ -97,8 +103,8 @@ async function getSong() {
         title: title,
         artist: channelName,
         artwork: { src: `/${window.location.search}getThumbnail?name=${title}&author=${channelName}`, sizes: '512x512', type: 'image/png' }
-    }]);    
-    
+    }]);
+
     if(playing) songElement.play();
     else play();
 }
@@ -146,7 +152,7 @@ songElement.addEventListener("timeupdate", (ev) => {
     if(timeBar.value == 100 && doLoop == "singleLoop") {
         timeBar.value = 0;
         songElement.currentTime = 0;
-        return;    
+        return;
     }
 
     if(timeBar.value == 100 && songPosition != currentSongs.length - 1) {
@@ -255,7 +261,7 @@ async function getAllSongs() {
         holderDiv.style.backgroundColor = "rgb(20, 20, 20)";
 
         holderDiv.onmouseenter = () => {
-            holderDiv.style.backgroundColor = "gray";         
+            holderDiv.style.backgroundColor = "gray";
         }
 
         holderDiv.onmouseleave = () => {

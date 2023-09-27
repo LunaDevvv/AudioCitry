@@ -7,6 +7,7 @@ let PORT : number | string = 5000;
 
 let runType = "server";
 
+dotenv.config();
 
 let NGROK_TOKEN : string | undefined= undefined;
 
@@ -20,8 +21,6 @@ for(let i = 0; i < process.argv.length; i++) {
     }
 
     if(process.argv[i] == "--use-ngrok") {
-        dotenv.config();
-
         NGROK_TOKEN = process.env.NGROK_TOKEN;
     }
 

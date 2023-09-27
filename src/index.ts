@@ -11,7 +11,7 @@ let CURRENT_VERSION = fs.readFileSync(`${__dirname.replaceAll("\\", "/").replace
 let readLineQuestions = readline.createInterface(process.stdin, process.stdout);
 
 getAndExtractData().then(async() => {
-    console.error = (text : string) => {}
+    console.error = () => {}
 
     while(fs.existsSync("./temp/version.txt") == false) {
         await sleep(50);
@@ -27,9 +27,9 @@ getAndExtractData().then(async() => {
 
         process.exit(0);
     } else {
-        readLineQuestions.question('Do you want to update? (Y/n):\n', (answer) => {
+        readLineQuestions.question('Do you want to update? (y/N):\n', (answer) => {
             readLineQuestions.close();
-            if(answer.toLowerCase() === "n") {
+            if(answer.toLowerCase() !== "y") {
                 fs.rmdirSync("./temp", {
                     recursive: true
                 });
@@ -37,7 +37,7 @@ getAndExtractData().then(async() => {
             }
 
             glob("./temp/**/*").then((files) => {
-                
+
                 for(let i = 0; i < files.length; i++) {
                     if(files[i].includes("files.zip")) continue;
                     let file = files[i].replace("temp\\", "");
@@ -46,15 +46,15 @@ getAndExtractData().then(async() => {
 
                     if(fs.lstatSync(files[i]).isDirectory()) {
                         if(!fs.existsSync(files[i])) fs.mkdirSync(files[i]);
-                        continue;                    
+                        continue;
                     }
-                
+
                     let dirName = path.dirname(file);
-                
+
                     if(!fs.existsSync(dirName)) fs.mkdirSync(dirName);
-                
+
                     let fileData = fs.readFileSync(files[i]).toString();
-                
+
                     fs.writeFileSync(file, fileData);
                 }
 
@@ -70,7 +70,7 @@ async function getAndExtractData() {
     axios.get(
         `https://api.github.com/repos/lunadevvv/audiocity/releases/latest`
     ).then(async (response) => {
-        
+
         // Wipe old temp files.
         if(fs.existsSync("./temp")) {
             fs.rmdirSync("./temp", {
@@ -79,27 +79,27 @@ async function getAndExtractData() {
         }
         fs.mkdirSync("./temp");
 
-    
+
         let data = await axios.get(response.data.zipball_url, {
             responseType: "stream"
         });
-    
-    
+
+
         let fileStream = fs.createWriteStream("./temp/files.zip")
-    
+
         data.data.pipe(fileStream);
-    
+
         fileStream.on("close", async () => {
             let firstDir = true;
             let baseDirName = "";
-    
+
             try {
                 yauzl.open("./temp/files.zip", {
                     lazyEntries : true
                 }, (err, zipFile) => {
                     if(err) console.error(err);
                     zipFile.readEntry();
-        
+
                     zipFile.on("entry", (entry) => {
                         if(firstDir == true) {
                             firstDir = false;
@@ -107,16 +107,16 @@ async function getAndExtractData() {
                             zipFile.readEntry();
                             return;
                         }
-    
+
                         if(/\/$/.test(entry.fileName)) {
                             fs.mkdirSync("./temp/" + entry.fileName.replace(baseDirName, ""));
                             zipFile.readEntry();
                             return;
                         }
-    
+
                         zipFile.openReadStream(entry, (err, readStream) => {
                             if(err) console.error(err);
-    
+
                             readStream.pipe(fs.createWriteStream("./temp/" + entry.fileName.replace(baseDirName, "")));
                         })
 

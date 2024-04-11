@@ -1,0 +1,3 @@
+get channel: yt-dlp --print "%(channel)s"
+get duration: yt-dlp --print "%(duration>%H:%M:%S)s"
+get name: yt-dlp --print "%(title)s"

@@ -1,1 +1,3 @@
-Mark Ronson - 00:04:30 - Mark Ronson - Uptown Funk (Official Video) ft. Bruno Mars
+This is so I can remember the command for when I need it:
+
+yt-dlp --print "&%(channel)s" // Channel name

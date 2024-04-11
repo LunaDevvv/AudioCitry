@@ -1,0 +1,189 @@
+body {
+    background-color: black;
+    height : 100%;
+    width : 100%;
+    margin: 0;
+}
+
+.bottomBar {
+    position: fixed;
+    top : calc(100% - 85px);
+    height : 85px;
+    width : 100vw;
+    background-color: rgb(15, 15, 15);
+}
+
+.playbackButtons {
+    width : 30px;
+    height : 30px;
+    color : gray;
+    top: 20px;
+}
+
+.play {
+    position : relative;
+}
+
+.skipBack {
+    position : relative;
+    left : -30px;
+}
+
+.skipForward {
+    position: relative;
+    left : 30px;
+}
+
+#shuffleMix {
+    position : relative;
+    left : -60px;
+    width: 30px;
+    height : 30px;
+    top: 20px;
+}
+
+#loopButton {
+    position : relative;
+    left : 65px;
+    width: 30px;
+    height : 30px;
+    top: 20px;
+}
+
+#playBar {
+    display: flex;
+    top: 50px;
+    flex-direction: row;
+}
+
+.bar {
+    border-radius: 8px;
+    height: 4px;
+    width: 30vw;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+#volBar {
+    position: absolute;
+    left: calc(100vw - 250px);
+    top : 50px;
+}
+
+.volumeBar {
+    border-radius: 8px;
+    height: 4px;
+    width: 200px;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    position: absolute;
+}
+
+.sideBar {
+    height: calc(100vh - 75px);
+    width: 300px;
+    background-color: rgb(15, 15, 15);
+    position: absolute;
+    top : 0px;
+    left : 0px;
+
+}
+
+input[type='range']::-webkit-slider-thumb {
+    width: 10px;
+    -webkit-appearance: none;
+    height: 12px;
+    background : gray;
+    border-radius: 50%;
+}
+
+
+.realTime {
+    color: gray;
+    font-size: large;
+}
+
+.remainingDuration {
+    color: gray;
+    font-size: large;
+}
+
+#ytDownload {
+    top: 202px;
+    position: absolute;
+    background-color: rgb(27, 27, 27);
+    width: 250px;
+    left: 25px;
+    border-radius: 10px;
+    border: none;
+    height: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+#logout {
+    top: 230px;
+    position: absolute;
+    background-color: rgb(27, 27, 27);
+    color: white;
+    border: none;
+    width: 250px;
+    border-radius: 15px;
+    left: 25px;
+}
+#logoutLogo {
+    position: absolute;
+    top: 230px;
+    left: 3px;
+    color: white;
+    width: 25px;
+    height: 25px;
+}
+
+#ytDownloadLogo {
+    position: absolute;
+    top: 203px;
+    left: 3px;
+}
+
+#pageHolder {
+    position : absolute;
+    width : calc(100% - 350px);
+    height : calc(100% - 100px);
+    left: 325px;
+    background-color: rgb(39, 39, 39);
+    border-radius: 30px;
+    overflow-y: auto;
+}
+
+#currentSong {
+    position : absolute;
+    width : 100%;
+    top: -15px;
+    text-align: center;
+    color: darkslategray;
+    font-size: large;
+}
+
+.center {
+    position: absolute;
+    left : 50%;
+    transform: translate(-50%, 0);
+}
+
+#currentSongThumbnail {
+    position : absolute;
+    top: -85px;
+    border-radius: 10px;
+}
+
+#volumeBarIcon {
+    position: absolute;
+    left: calc(100vw - 290px);
+    top : 40px;
+    height: 30px;
+    width: 30px;
+    color : gray;
+}
